@@ -9,6 +9,7 @@ import (
 func RunDockerCommand(args ...string) {
 	dockerCommand := append([]string{"docker"}, args...)
 	cmd := exec.Command(dockerCommand[0], dockerCommand[1:]...)
+	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

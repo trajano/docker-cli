@@ -49,12 +49,33 @@ func main() {
 			},
 		},
 		{
-			Name:        "ptag",
+			Name:        "run",
 			Description: "docker ps with better formatting",
+			ExecFunc: func(ctx context.Context, args []string) error {
+				RunDockerCommand(append([]string{"run", "-it", "--log-driver=none", "--rm"}, args...)...)
+				return nil
+			},
+		},
+		{
+			Name:        "ptag",
+			Description: "Tag and Push",
 			ExecFunc: func(ctx context.Context, args []string) error {
 				RunDockerCommand("tag", args[0])
 				RunDockerCommand("push", args[1])
 				return nil
+			},
+		},
+		{
+			Name:        "service",
+			Description: "Tag and Push",
+			Subcommands: []acmd.Command{
+				{Name: "restart",
+					Description: "Restart a service",
+					ExecFunc: func(ctx context.Context, args []string) error {
+						RunDockerCommand("service", "update", "--force", args[0])
+						return nil
+					},
+				},
 			},
 		},
 	}
