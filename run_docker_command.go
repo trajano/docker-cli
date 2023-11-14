@@ -14,8 +14,12 @@ func RunDockerCommand(args ...string) {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Error running Docker command: %v\n", err)
-		os.Exit(1)
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			os.Exit(exitErr.ExitCode())
+		} else {
+			fmt.Printf("Error running Docker command: %v\n", err)
+			os.Exit(1)
+		}
 	}
 	os.Exit(0)
 }
