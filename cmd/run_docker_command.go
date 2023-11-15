@@ -27,7 +27,6 @@ func RunDockerCommand(args ...string) {
 			os.Exit(1)
 		}
 	}
-	os.Exit(0)
 }
 
 type DockerContainer struct {
