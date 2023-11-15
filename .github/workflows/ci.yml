@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v2
+      - name: Build for Windows
+        run: GOOS=windows GOARCH=amd64 go build -o dist/docker-cli_windows_amd64.exe
+
+      - name: Build for macOS
+        run: GOOS=darwin GOARCH=amd64 go build -o dist/docker-cli_darwin_amd64
+
+      - name: Build for Linux
+        run: GOOS=linux GOARCH=amd64 go build -o dist/docker-cli_linux_amd64
+
+      - name: Build for Raspberry Pi
+        run: GOOS=linux GOARCH=arm GOARM=7 go build -o dist/docker-cli_linux_arm
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true

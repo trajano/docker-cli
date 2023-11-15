@@ -4,6 +4,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 ## What this does
 
 * `docker run` will set to logging to none and `-it` by default
+* `docker rm` is forced
 * `docker ps` will actually call `docker inspect` then render the data using github.com/jedib0t/go-pretty.
   * Primarily because I want to know WHEN the bloody container started,
   * how long it took to start rather than about a minute ago.
