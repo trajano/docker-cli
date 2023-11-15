@@ -5,12 +5,41 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/docker/client"
 )
+
+// Given a search key provide the services.
+//
+// Parameters:
+// s - search key.  If it starts with `~` then this will do a partial name search within the names.  If it is nil all service are returned
+//
+// Returns:
+// a list of service
+func Services(keys []string) ([]swarm.Service, error) {
+	var services []swarm.Service
+	var err error
+	_, isDockerHostSet := os.LookupEnv("DOCKER_HOST")
+	if isDockerHostSet {
+		services, err = servicesViaCli()
+	} else {
+		services, err = servicesViaClient()
+	}
+	if err != nil {
+		return nil, err
+	}
+	var filteredServices []swarm.Service
+	for _, service := range services {
+		if len(keys) == 0 || isServiceSatisfiedBySearchKey(keys, &service) {
+			filteredServices = append(filteredServices, service)
+		}
+	}
+	return filteredServices, nil
+}
 
 // Given a search key provide the service names.
 //
@@ -19,7 +48,7 @@ import (
 //
 // Returns:
 // a list of service names
-func Services(keys []string) ([]string, error) {
+func ServiceNames(keys []string) ([]string, error) {
 	var services []swarm.Service
 	var err error
 	_, isDockerHostSet := os.LookupEnv("DOCKER_HOST")
@@ -63,15 +92,33 @@ func servicesViaCli() ([]swarm.Service, error) {
 	var services []swarm.Service
 	for _, line := range lines {
 		var serviceLsInfo serviceLsInfo
+		var runningCount int
+		var desiredCount int
 		if err := json.Unmarshal([]byte(line), &serviceLsInfo); err != nil {
 			return nil, err
 		}
+		if runningCount, err = strconv.Atoi(strings.Split(serviceLsInfo.Replicas, "/")[0]); err != nil {
+			return nil, err
+		}
+		if desiredCount, err = strconv.Atoi(strings.Split(serviceLsInfo.Replicas, "/")[1]); err != nil {
+			return nil, err
+		}
+
 		service := swarm.Service{
 			ID: serviceLsInfo.ID,
 			Spec: swarm.ServiceSpec{
 				Annotations: swarm.Annotations{
 					Name: serviceLsInfo.Name,
 				},
+				TaskTemplate: swarm.TaskSpec{
+					ContainerSpec: &swarm.ContainerSpec{
+						Image: serviceLsInfo.Image,
+					},
+				},
+			},
+			ServiceStatus: &swarm.ServiceStatus{
+				RunningTasks: uint64(runningCount),
+				DesiredTasks: uint64(desiredCount),
 			},
 		}
 		services = append(services, service)
