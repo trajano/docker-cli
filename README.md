@@ -29,6 +29,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker du` shows disk usage stats in YAML (generally the output for almost all will be in YAML rather than JSON so it's easier for human consumption)
 - [ ] `docker stat` runs `docker stats --no-stream` with sane columns (i.e. no ID)
 - [ ] `docker stats` runs with sane columns (i.e. no ID) and hopefully less flashing
+- [ ] `docker context create <name> <dockerhost>` maps to `docker context create <name> --docker "host=<dockerhost>"`
 
 ## Architecture
 
