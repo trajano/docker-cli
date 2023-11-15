@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/cristalhq/acmd"
+	"trajano.net/docker-cli/cmd"
 )
 
 type CommandReceiver interface {
@@ -37,8 +38,10 @@ func ServiceCommandGroup() bool {
 	fmt.Printf("Service: %s, Command: %s\n", service, command)
 	return true
 }
-
 func main() {
+	cmd.Execute()
+}
+func xmain() {
 	cmds := []acmd.Command{
 		{
 			Name:        "ps",
@@ -46,6 +49,20 @@ func main() {
 			ExecFunc: func(ctx context.Context, args []string) error {
 				RunDockerCommand("ps", "--format", "table {{.Names}}\t{{.Image}}\t{{.Status}}")
 				return nil
+			},
+		},
+		{
+			Name:        "pps",
+			Description: "docker ps with better formatting",
+			ExecFunc: func(ctx context.Context, args []string) error {
+				return PrettyPs(args)
+				// if containerIDs, err := Containers2(args); err != nil {
+				// 	return err
+				// } else {
+				//   PrettyPs()
+				// 	RunDockerCommand(append([]string{"inspect", "--format", "json"}, containerIDs...)...)
+				// }
+				// return nil
 			},
 		},
 		{
@@ -84,7 +101,6 @@ func main() {
 		RunDockerCommand(os.Args[1:]...)
 		//r.Exit(err)
 	}
-	fmt.Println("Bar")
 }
 
 // github.com/cristalhq/acmd	parser := argparse.NewParser("docker-cli", "Wraps the Docker command")
