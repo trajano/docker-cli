@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/docker/client"
 )
 
@@ -110,82 +108,6 @@ func Containers2(keys []string) ([]string, error) {
 	return containerIDs, nil
 }
 
-func Services(keys []string) ([]string, error) {
-	var services []swarm.Service
-	var err error
-	_, isDockerHostSet := os.LookupEnv("DOCKER_HOST")
-	if isDockerHostSet {
-		services, err = ServicesViaCli()
-	} else {
-		services, err = ServicesViaClient()
-	}
-	if err != nil {
-		return nil, err
-	}
-	var serviceNames []string
-	for _, service := range services {
-		if len(keys) == 0 || IsServiceSatisfiedBySearchKey(keys, &service) {
-			serviceNames = append(serviceNames, service.Spec.Name)
-		}
-	}
-	return serviceNames, nil
-}
-
-type ServiceLsInfo struct {
-	ID       string `json:"ID"`
-	Image    string `json:"Image"`
-	Mode     string `json:"Mode"`
-	Name     string `json:"Name"`
-	Ports    string `json:"Ports"`
-	Replicas string `json:"Replicas"`
-}
-
-// Workaround for when direct API access is not available due to using DOCKER_HOST and fallback to the CLI
-func ServicesViaCli() ([]swarm.Service, error) {
-	cmd := exec.Command("docker", "service", "ls", "--format", "json")
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	// Yes I know this is not a good way of doing it, still learning Go, I presume there's some way to do it via a stream rather than reading it all in memory
-	output, err := cmd.Output()
-	if err != nil {
-		return nil, err
-	}
-	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
-	var services []swarm.Service
-	for _, line := range lines {
-		var serviceLsInfo ServiceLsInfo
-		if err := json.Unmarshal([]byte(line), &serviceLsInfo); err != nil {
-			return nil, err
-		}
-		service := swarm.Service{
-			ID: serviceLsInfo.ID,
-			Spec: swarm.ServiceSpec{
-				Annotations: swarm.Annotations{
-					Name: serviceLsInfo.Name,
-				},
-			},
-		}
-		services = append(services, service)
-	}
-	return services, nil
-}
-
-func ServicesViaClient() ([]swarm.Service, error) {
-	cli, err := client.NewClientWithOpts(client.FromEnv)
-	if err != nil {
-		return nil, err
-	}
-	return cli.ServiceList(context.Background(), types.ServiceListOptions{Status: true})
-}
-
-func IsServiceSatisfiedBySearchKey(keys []string, service *swarm.Service) bool {
-	for _, s := range keys {
-		if (strings.HasPrefix(s, "~") && strings.Contains(service.Spec.Name, s[1:])) || service.Spec.Name == s || strings.HasPrefix(service.ID, s) {
-			return true
-		}
-	}
-	return false
-}
 func IsContainerSatisfiedBySearchKey(keys []string, container *types.Container) bool {
 	for _, s := range keys {
 		for _, name := range container.Names {

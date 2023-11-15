@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"trajano.net/docker-cli/docker"
 )
 
 // restartCmd represents the restart command
@@ -20,7 +21,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, keys []string) error {
-		services, err := Services(keys)
+		services, err := docker.Services(keys)
 		if err != nil {
 			fmt.Println(err)
 			return err
