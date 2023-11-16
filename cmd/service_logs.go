@@ -11,11 +11,12 @@ import (
 )
 
 var serviceLogsSince string
+var serviceLogsFollow bool
 var serviceLogsSincePositional bool = false
 
 // serviceLogsCmd represents the logs command
 var serviceLogsCmd = &cobra.Command{
-	Use: "logs",
+	Use: "logs [SINCE] SERVICE|TASK",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 2 {
 			_, err := time.Parse(time.RFC3339Nano, args[0])
@@ -37,25 +38,21 @@ var serviceLogsCmd = &cobra.Command{
 	Short: "Fetch the logs of a service or task",
 	Long:  `Fetch the logs of a service or task.  This defaults to start following from the end of the log.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if serviceLogsSincePositional {
-			RunDockerCommand(append([]string{"service", "logs", "--raw", "--since", serviceLogsSince, "--follow"}, args[1])...)
-		} else {
-			RunDockerCommand(append([]string{"service", "logs", "--raw", "--since", serviceLogsSince, "--follow"}, args...)...)
+		dockerCmd := []string{"service", "logs", "--raw", "--since", serviceLogsSince}
+		if serviceLogsFollow {
+			dockerCmd = append(dockerCmd, "--follow")
 		}
-
+		if serviceLogsSincePositional {
+			dockerCmd = append(dockerCmd, args[1])
+		} else {
+			dockerCmd = append(dockerCmd, args...)
+		}
+		RunDockerCommand(dockerCmd...)
 	},
 }
 
 func init() {
 	serviceCmd.AddCommand(serviceLogsCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// logsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	serviceLogsCmd.Flags().StringVarP(&serviceLogsSince, "since", "", "0s", "Show logs since timestamp (e.g, \"2013-01-02T13:23:37Z\") or relative (e.g. \"42m\" for 42 minutes)")
+	serviceLogsCmd.Flags().BoolVarP(&serviceLogsFollow, "follow", "f", true, "Follow log output")
 }
