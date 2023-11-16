@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/docker/docker/api/types/swarm"
 	"github.com/spf13/cobra"
@@ -28,18 +29,47 @@ type serviceSwarmResourceRequirements struct {
 	*swarm.ResourceRequirements
 	Limits *serviceSwarmLimit
 }
+type serviceRestartPolicy struct {
+	*swarm.RestartPolicy
+}
+type serviceUpdateConfig struct {
+	*swarm.UpdateConfig
+}
+type serviceContainerSpec struct {
+	*swarm.ContainerSpec
+}
 type serviceSwarmTaskSpec struct {
 	*swarm.TaskSpec
-	Resources *serviceSwarmResourceRequirements
+	ContainerSpec *serviceContainerSpec
+	Resources     *serviceSwarmResourceRequirements
+	RestartPolicy *serviceRestartPolicy
 }
 type serviceSwarmSpec struct {
 	*swarm.ServiceSpec
-	TaskTemplate serviceSwarmTaskSpec
+	TaskTemplate   serviceSwarmTaskSpec
+	UpdateConfig   *serviceUpdateConfig
+	RollbackConfig *serviceUpdateConfig
 }
 type serviceInfo struct {
 	*swarm.Service
 	Spec     *serviceSwarmSpec
 	Endpoint *swarm.Endpoint
+}
+
+func formatDuration(duration time.Duration) string {
+	switch {
+	case duration.Seconds() < 1:
+		return duration.Round(time.Millisecond).String()
+	case duration.Minutes() < 1:
+		return duration.Round(time.Second).String()
+	case duration.Hours() < 1:
+		return duration.Round(time.Minute).String()
+	case duration.Hours() < 24:
+		return duration.Round(time.Hour).String()
+	default:
+		days := int(duration.Hours() / 24)
+		return fmt.Sprintf("%dd", days)
+	}
 }
 
 func formatBytes(in int64) string {
@@ -69,8 +99,28 @@ func (limit *serviceSwarmLimit) MarshalJSON() ([]byte, error) {
 	return json.Marshal(limitMap)
 }
 
+func (restartPolicy *serviceRestartPolicy) MarshalJSON() ([]byte, error) {
+	jsonMap := make(map[string]interface{})
+	jsonMap["Condition"] = restartPolicy.Condition
+	jsonMap["MaxAttempts"] = restartPolicy.MaxAttempts
+	if restartPolicy.Delay != nil {
+		jsonMap["Delay"] = formatDuration(*restartPolicy.Delay)
+	}
+	return json.Marshal(jsonMap)
+}
+
+func (updateConfig *serviceUpdateConfig) MarshalJSON() ([]byte, error) {
+	jsonMap := make(map[string]interface{})
+	jsonMap["Parallelism"] = updateConfig.Parallelism
+	jsonMap["FailureAction"] = updateConfig.FailureAction
+	jsonMap["Monitor"] = formatDuration(updateConfig.Monitor)
+	jsonMap["MaxFailureRatio"] = updateConfig.MaxFailureRatio
+	jsonMap["Order"] = updateConfig.Order
+	return json.Marshal(jsonMap)
+}
+
 // inspectCmd represents the inspect command
-var inspectCmd = &cobra.Command{
+var serviceInspectCmd = &cobra.Command{
 	Use:   "inspect",
 	Short: "Display detailed information on one or more services",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -119,8 +169,12 @@ to quickly create a Cobra application.`,
 				services[i].Endpoint.VirtualIPs[j].NetworkID = networks[services[i].Endpoint.VirtualIPs[j].NetworkID].Name
 			}
 		}
-
-		jsonData, err := json.Marshal(services)
+		var jsonData []byte
+		if len(services) == 1 {
+			jsonData, err = json.Marshal(services[0])
+		} else {
+			jsonData, err = json.Marshal(services)
+		}
 		if err != nil {
 			return err
 		}
@@ -130,5 +184,5 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	serviceCmd.AddCommand(inspectCmd)
+	serviceCmd.AddCommand(serviceInspectCmd)
 }

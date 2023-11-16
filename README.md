@@ -16,6 +16,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
   - [x] drop `:latest` if that's the image tag
   - [x] use github.com/jedib0t/go-pretty to render the table
   - [x] `--down` to list services that are not fully up
+- [x] `docker service env` shows the environment variables
 - [x] `docker service ps` without the service list will do all services
   - [x] if primary is running and is desired to be running, don't bother showing the others
 - [x] `docker ptag` to tag and push image in one command
