@@ -29,6 +29,31 @@ func RunDockerCommand(args ...string) {
 	}
 }
 
+// Run a docker command and extract individual lines as bytes suitable for json Unmarshal
+func RunDockerCommandMapJsonBytes(args ...string) ([][]byte, error) {
+	dockerCommand := append([]string{"docker"}, args...)
+	cmd := exec.Command(dockerCommand[0], dockerCommand[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+
+	output, err := cmd.Output()
+	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			os.Exit(exitErr.ExitCode())
+		} else {
+			return nil, err
+		}
+	}
+	lines := strings.Split(string(output), "\n")
+	var collect [][]byte
+	for _, line := range lines {
+		if len(line) > 0 {
+			collect = append(collect, []byte(line))
+		}
+	}
+	return collect, nil
+}
+
 type DockerContainer struct {
 	ID    string   `json:"ID"`
 	Names []string `json:"Names"`

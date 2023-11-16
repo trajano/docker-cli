@@ -10,6 +10,8 @@ import (
 	"trajano.net/docker-cli/docker"
 )
 
+var serviceRestartDetached bool
+
 // restartCmd represents the restart command
 var restartCmd = &cobra.Command{
 	Use:   "restart",
@@ -27,8 +29,11 @@ to quickly create a Cobra application.`,
 			return err
 		}
 		for _, serviceName := range services {
-			fmt.Println("restart " + serviceName)
-			RunDockerCommand("service", "update", "--force", serviceName)
+			if serviceRestartDetached {
+				RunDockerCommand("service", "update", "-d", "--force", serviceName)
+			} else {
+				RunDockerCommand("service", "update", "--force", serviceName)
+			}
 		}
 		return nil
 	},
@@ -45,5 +50,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// restartCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	restartCmd.Flags().BoolVarP(&serviceRestartDetached, "detached", "d", false, "Restart in background")
 }

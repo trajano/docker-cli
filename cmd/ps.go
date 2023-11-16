@@ -18,11 +18,21 @@ import (
 
 var PsAll bool
 
-func stripLatestSuffix(input string) string {
+// Sanitizes the image name.  This strips off `:latest` tag and `ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib` is replaced with `opentelemetry-collector`
+// This also handles images containing a `library/` path  so those will be stripped off along with the prefix as it is assumed to be proxied.
+func sanitizeImageName(input string) string {
+	t := input
 	if strings.HasSuffix(input, ":latest") {
-		return strings.TrimSuffix(input, ":latest")
+		t = strings.TrimSuffix(input, ":latest")
 	}
-	return input
+	if strings.HasPrefix(t, "ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib") {
+		return "<opentelemetry-collector>"
+	}
+	if index := strings.Index(t, "/library/"); index != -1 {
+		return t[index+9:]
+	}
+
+	return t
 }
 
 func psFunc(cmd *cobra.Command, keys []string) error {
@@ -77,7 +87,7 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 				// 	startupTime = startedAt.Sub(createdAt)
 				// }
 
-				imageName := stripLatestSuffix(container.Image)
+				imageName := sanitizeImageName(container.Image)
 				if strings.HasPrefix(container.Image, "sha256:") {
 					imageName = container.Image[7:19]
 				}

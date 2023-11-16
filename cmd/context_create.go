@@ -11,15 +11,15 @@ import (
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Args:  cobra.ExactArgs(2),
-	Short: "Create a Docker context",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:       "create CONTEXT TARGET",
+	Args:      cobra.ExactArgs(2),
+	ValidArgs: []string{"CONTEXT", "TARGET"},
+	Example:   "docker context create nas ssh://nas",
+	Short:     "Create a Docker context",
+	Long: `Creates a new Docker context.  This effectively maps to:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  docker context create CONTEXT --docker host=TARGET
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		RunDockerCommand("context", "create", args[0], "--docker", fmt.Sprintf("host=%s", args[1]))
 	},

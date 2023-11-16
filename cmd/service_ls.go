@@ -41,7 +41,7 @@ to quickly create a Cobra application.`,
 			if (lsDown && service.ServiceStatus.DesiredTasks > 0 && service.ServiceStatus.RunningTasks != service.ServiceStatus.DesiredTasks) || (!lsDown) {
 				t.AppendRow([]interface{}{
 					service.Spec.Name,
-					stripLatestSuffix(service.Spec.TaskTemplate.ContainerSpec.Image),
+					sanitizeImageName(service.Spec.TaskTemplate.ContainerSpec.Image),
 					replicas,
 				})
 			}
