@@ -99,6 +99,8 @@ var servicePsCmd = &cobra.Command{
 			image = sanitizeImageName(image)
 			desiredState := task.DesiredState
 			if desiredState == "Running" {
+				desiredState = ""
+			} else if desiredState == "Ready" {
 				desiredState = ""
 			} else if desiredState == "Shutdown" {
 				desiredState = ""
