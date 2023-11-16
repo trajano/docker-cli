@@ -117,21 +117,6 @@ var servicePsCmd = &cobra.Command{
 					sanitizeError(task.Error),
 				})
 			}
-			// if task.Error != "" {
-			// 	t.AppendRow([]interface{}{
-			// 		"",
-			// 		"",
-			// 		"",
-			// 		task.Error,
-			// 	})
-
-			// }
-
-			// var yamlData []byte
-			// if yamlData, err = yaml.Marshal(task); err != nil {
-			// 	return err
-			// }
-			// fmt.Println(string(yamlData))
 		}
 		// t.SetAutoIndex(true)
 		// t.SetColumnConfigs([]table.ColumnConfig{

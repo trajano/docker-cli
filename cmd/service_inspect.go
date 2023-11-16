@@ -11,7 +11,6 @@ import (
 
 	"github.com/docker/docker/api/types/swarm"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 	"trajano.net/docker-cli/docker"
 )
 
@@ -68,14 +67,13 @@ to quickly create a Cobra application.`,
 			for j := range services[i].Endpoint.VirtualIPs {
 				services[i].Endpoint.VirtualIPs[j].NetworkID = networks[services[i].Endpoint.VirtualIPs[j].NetworkID].Name
 			}
-
 		}
 
-		yamlData, err := yaml.Marshal(services)
+		jsonData, err := json.Marshal(services)
 		if err != nil {
 			return err
 		}
-		fmt.Println(string(yamlData))
+		fmt.Println(string(jsonData))
 		return nil
 	},
 }

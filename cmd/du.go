@@ -5,12 +5,12 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 )
 
 // duCmd represents the du command
@@ -39,25 +39,15 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			return err
 		}
-		yamlData, err := yaml.Marshal(diskUsage)
+		jsonData, err := json.Marshal(diskUsage)
 		if err != nil {
 			return err
 		}
-		fmt.Println(string(yamlData))
+		fmt.Println(string(jsonData))
 		return nil
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(duCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// duCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// duCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

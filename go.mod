@@ -1,11 +1,10 @@
 module trajano.net/docker-cli
 
-go 1.21
+go 1.21.2
 
 toolchain go1.21.4
 
 require (
-	github.com/cristalhq/acmd v0.11.1
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/dustin/go-humanize v1.0.1
 	github.com/jedib0t/go-pretty/v6 v6.4.9
@@ -14,7 +13,6 @@ require (
 
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
-	github.com/bit101/go-ansi v1.5.1 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -32,9 +30,7 @@ require (
 	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/net v0.6.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/time v0.4.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
 )
