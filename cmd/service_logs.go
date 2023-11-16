@@ -35,7 +35,7 @@ var serviceLogsCmd = &cobra.Command{
 		}
 	},
 	Short: "Fetch the logs of a service or task",
-	Long:  `Fetch the logs of a service or task`,
+	Long:  `Fetch the logs of a service or task.  This defaults to start following from the end of the log.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if serviceLogsSincePositional {
 			RunDockerCommand(append([]string{"service", "logs", "--raw", "--since", serviceLogsSince, "--follow"}, args[1])...)
