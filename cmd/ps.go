@@ -6,6 +6,7 @@ package cmd
 import (
 	"context"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -50,7 +51,7 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 	t := table.NewWriter()
 	t.SetStyle(table.StyleColoredDark)
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"Name", "Image", "", "Status", "Since"})
+	t.AppendHeader(table.Row{"Name", "Image", "", "Status", "Since", "", "Ports"})
 	for _, container := range containers {
 		if len(keys) == 0 || IsContainerSatisfiedBySearchKey(keys, &container) {
 			if containerJson, err := cli.ContainerInspect(context.Background(), container.ID); err != nil {
@@ -87,11 +88,23 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 				// 	startupTime = startedAt.Sub(createdAt)
 				// }
 
+				_, swarmService := container.Labels["com.docker.swarm.task"]
+
 				imageName := sanitizeImageName(container.Image)
 				if strings.HasPrefix(container.Image, "sha256:") {
 					imageName = container.Image[7:19]
 				}
 
+				var exposedPorts []string
+				ports := container.Ports
+				if swarmService {
+					ports = []types.Port{}
+				}
+				for _, port := range ports {
+					if port.PublicPort != 0 {
+						exposedPorts = append(exposedPorts, strconv.FormatUint(uint64(port.PublicPort), 10))
+					}
+				}
 				t.AppendRow([]interface{}{
 					container.Names[0][1:],
 					imageName,
@@ -99,6 +112,7 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 					containerJson.State.Status,
 					startedAt.Format("2006-01-02 15:04"),
 					humanize.Time(startedAt),
+					strings.Join(exposedPorts, ", "),
 				})
 				// t.AppendRow([]interface{}{container.Names[0][1:], container.Image, containerJson.State.Health.Status})
 
@@ -126,14 +140,5 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(psCmd)
-	// psCmd.SilenceUsage = true
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// psCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	psCmd.Flags().BoolVarP(&PsAll, "all", "a", false, "Show all containers")
 }

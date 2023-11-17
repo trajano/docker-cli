@@ -11,6 +11,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker ps` will actually call `docker inspect` then render the data using github.com/jedib0t/go-pretty.
   - Primarily because I want to know WHEN the bloody container started,
   - how long it took to start rather than about a minute ago.
+  - [x] Show ports only if I am not running in service mode
 - [x] `docker service restart` maps to `docker service update --force`
 - [x] `docker service ls` shows only relavent columns
   - [x] drop `:latest` if that's the image tag
