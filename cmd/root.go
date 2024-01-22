@@ -4,9 +4,9 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,7 @@ func Execute() {
 	rootCmd.SilenceUsage = true
 	err := rootCmd.Execute()
 	if err != nil {
-		fmt.Println(err)
+		log.Error().Err(err).Msg("Unrecognized command, falling back to Docker CLI")
 		RunDockerCommand((os.Args[1:])...)
 	}
 }
