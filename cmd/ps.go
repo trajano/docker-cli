@@ -22,7 +22,9 @@ var PsAll bool
 // Sanitizes the image name.  This strips off `:latest` tag and `ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib` is replaced with `opentelemetry-collector`
 // This also handles images containing a `library/` path  so those will be stripped off along with the prefix as it is assumed to be proxied.
 func sanitizeImageName(input string) string {
-	t := input
+  parts := strings.Split(input, "@sha256:")
+	t := parts[0]
+
 	if strings.HasSuffix(input, ":latest") {
 		t = strings.TrimSuffix(input, ":latest")
 	}
