@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
@@ -61,7 +62,7 @@ type DockerContainer struct {
 
 func RunDockerPs() {
 	cli, err := client.NewClientWithOpts(client.FromEnv)
-	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{})
 	if err != nil {
 		// fmt.Println("Error listing containers:", err)
 		panic("Error running docker ps")
@@ -91,7 +92,7 @@ func Containers(s string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +120,7 @@ func Containers2(keys []string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +156,7 @@ func AllContainers() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{})
 	if err != nil {
 		return nil, err
 	}

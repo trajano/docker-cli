@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/spf13/cobra"
 )
@@ -23,7 +23,7 @@ var rmCmd = &cobra.Command{
 			return err
 		}
 		for _, containerId := range containerIds {
-			err := cli.ContainerRemove(context.Background(), containerId, types.ContainerRemoveOptions{
+			err := cli.ContainerRemove(context.Background(), containerId, container.RemoveOptions{
 				RemoveVolumes: true,
 				Force:         true,
 			})
