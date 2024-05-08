@@ -47,8 +47,8 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker service inspect` shows data
   - [x] gets rid of the previous spec
   - [x] use network names rather than the IDs
-- [ ] `docker service logs` like docker service logs but starts tailing, passes `--raw`
-  - [ ] supports a positional paramter which represents since without having to type in `--since`
+- [x] `docker service logs` like docker service logs but starts tailing, passes `--raw`
+  - [x] supports a positional paramter which represents since without having to type in `--since`
 - [x] `docker du` shows disk usage stats in JSON
 - [ ] `docker stat` runs `docker stats --no-stream` with sane columns (i.e. no ID)
 - [ ] `docker stats` runs with sane columns (i.e. no ID) and hopefully less flashing
