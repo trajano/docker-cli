@@ -7,6 +7,8 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker run` will set to logging to none and `-it` by default
 
 - [x] `docker rm` is forced
+  - [x] and remove anonmized volumes
+- [x] `docker nuke` will remove all running containers and associated volumes (no warning, primarilly used for development when I just want a clean slate without doing a full reset)
 - [x] `docker ls` maps to `docker ps`
 - [x] `docker ps` will actually call `docker inspect` then render the data using github.com/jedib0t/go-pretty.
   - Primarily because I want to know WHEN the bloody container started,
