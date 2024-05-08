@@ -17,13 +17,13 @@ var serviceUpdateCmd = &cobra.Command{
 	Long:  `Update a service`,
 	Run: func(cmd *cobra.Command, services []string) {
 
-    if updateImage != "" {
-      for _, service := range services {
-        RunDockerCommand("service", "update", "--with-registry-auth", "--image", updateImage, service)
-      }
-    } else {
-      RunDockerCommand(append([]string{"service", "update"}, services...)...)
-    }
+		if updateImage != "" {
+			for _, service := range services {
+				RunDockerCommand("service", "update", "--with-registry-auth", "--image", updateImage, service)
+			}
+		} else {
+			RunDockerCommand(append([]string{"service", "update"}, services...)...)
+		}
 	},
 }
 

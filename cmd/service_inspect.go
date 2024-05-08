@@ -171,9 +171,9 @@ to quickly create a Cobra application.`,
 		}
 		var jsonData []byte
 		if len(services) == 1 {
-			jsonData, err = json.Marshal(services[0])
+			jsonData, err = json.MarshalIndent(services[0], "", "  ")
 		} else {
-			jsonData, err = json.Marshal(services)
+			jsonData, err = json.MarshalIndent(services, "", "  ")
 		}
 		if err != nil {
 			return err

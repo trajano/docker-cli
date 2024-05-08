@@ -37,7 +37,7 @@ func Execute() {
 	if err != nil {
 		log.Error().Err(err).Msg("Unrecognized command, falling back to Docker CLI")
 		RunDockerCommand((os.Args[1:])...)
-	}
+  }
 }
 
 func init() {

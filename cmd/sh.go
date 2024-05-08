@@ -11,9 +11,9 @@ var shCmd = &cobra.Command{
 	Use:   "sh",
 	Short: "Executes a Bourne shell in a running container",
 	Long:  `Executes a Bourne shell via /bin/sh in a running container`,
-  Args: cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-    RunDockerCommand("exec", "-it", args[0], "/bin/sh")
+		RunDockerCommand("exec", "-it", args[0], "/bin/sh")
 		return nil
 	},
 }

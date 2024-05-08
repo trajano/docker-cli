@@ -16,7 +16,7 @@ import (
 // duCmd represents the du command
 var duCmd = &cobra.Command{
 	Use:   "du",
-	Short: "A brief description of your command",
+	Short: "Disk usage report",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -24,7 +24,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cli, err := client.NewClientWithOpts(client.FromEnv)
+		cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 		if err != nil {
 			return err
 		}
@@ -39,7 +39,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			return err
 		}
-		jsonData, err := json.Marshal(diskUsage)
+		jsonData, err := json.MarshalIndent(diskUsage, "", "  ")
 		if err != nil {
 			return err
 		}

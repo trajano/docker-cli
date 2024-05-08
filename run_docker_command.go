@@ -38,7 +38,7 @@ type DockerContainer struct {
 }
 
 func RunDockerPs() {
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	containers, err := cli.ContainerList(context.Background(), container.ListOptions{})
 	if err != nil {
 		// fmt.Println("Error listing containers:", err)

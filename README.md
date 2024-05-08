@@ -23,6 +23,13 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker ptag` to tag and push image in one command
 
   - [x] `-p` to add support for generating a patch tag
+- [x] `docker build` adds implicit secrets to the build.
+  - [x] `init-gradle == $HOME/.gradle/init.gradle`
+  - [x] `npmrc == $HOME/.npmrc`
+  - [x] `settings-xml == $HOME/.mvn/settings.xml`
+  - [x] `aws-credentials == $HOME/.aws/credentials`
+- [x] `docker bash` runs `/bin/bash` given a container ID
+- [x] `docker sh` runs `/bin/sh` given a container ID
 
 - [ ] `docker service push <service> <image>` replaces the image of the service if image is not provided it pulls and then does the update to ensure it is the latest copy. It will also add `--with-registry-auth` as appropriate
 
