@@ -8,7 +8,7 @@ import (
 )
 
 var shCmd = &cobra.Command{
-	Use:   "sh",
+	Use:   "sh CONTAINERID",
 	Short: "Executes a Bourne shell in a running container",
 	Long:  `Executes a Bourne shell via /bin/sh in a running container`,
 	Args:  cobra.ExactArgs(1),
