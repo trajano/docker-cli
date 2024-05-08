@@ -23,8 +23,10 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker service ps` without the service list will do all services
   - [x] if primary is running and is desired to be running, don't bother showing the others
 - [x] `docker ptag` to tag and push image in one command
-
   - [x] `-p` to add support for generating a patch tag
+- [ ] `docker ports` lists exposed local port mappings with some specific tweaks for HTTPm that way I can simply <kbd>ctrl</kbd>-click the text on the terminal.
+  - [ ] if container has an image containing `httpd` or `ngnix` display as `http://localhost:{port}`
+  - [ ] if container internal port is `80`, `3000` or `8080` display as `http://localhost:{port}`
 - [x] `docker build` adds implicit secrets to the build.
   - [x] `init-gradle == $HOME/.gradle/init.gradle`
   - [x] `npmrc == $HOME/.npmrc`
@@ -32,6 +34,9 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
   - [x] `aws-credentials == $HOME/.aws/credentials`
 - [x] `docker bash` runs `/bin/bash` given a container ID
 - [x] `docker sh` runs `/bin/sh` given a container ID
+- [ ] `docker logs` like docker logs but starts tailing
+  - [ ] supports a positional paramter which represents since without having to type in `--since`
+  - [ ] the command usage is `docker tail [since] [containerID]`
 
 - [ ] `docker service push <service> <image>` replaces the image of the service if image is not provided it pulls and then does the update to ensure it is the latest copy. It will also add `--with-registry-auth` as appropriate
 
@@ -42,6 +47,8 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [x] `docker service inspect` shows data
   - [x] gets rid of the previous spec
   - [x] use network names rather than the IDs
+- [ ] `docker service logs` like docker service logs but starts tailing, passes `--raw`
+  - [ ] supports a positional paramter which represents since without having to type in `--since`
 - [x] `docker du` shows disk usage stats in JSON
 - [ ] `docker stat` runs `docker stats --no-stream` with sane columns (i.e. no ID)
 - [ ] `docker stats` runs with sane columns (i.e. no ID) and hopefully less flashing

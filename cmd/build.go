@@ -32,7 +32,9 @@ func appendSecret(secrets []string, secretName string, pathElem ...string) ([]st
 }
 
 var buildCmd = &cobra.Command{
-	Use:  "build",
+	Use:  "build [PATH | URL | -]",
+  Short: "Build an image from a Dockerfile",
+  Long: "Build an image from a Dockerfile, implicitly adds secrets",
 	Args: cobra.RangeArgs(0, 1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 
