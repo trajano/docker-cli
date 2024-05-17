@@ -6,6 +6,7 @@ package cmd
 import (
 	"context"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -113,6 +114,7 @@ func psFunc(cmd *cobra.Command, keys []string) error {
             }
 					}
 				}
+        sort.Strings(exposedPorts)
 				t.AppendRow([]interface{}{
 					container.Names[0][1:],
 					imageName,
