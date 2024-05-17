@@ -8,7 +8,7 @@ import (
 )
 
 var bashCmd = &cobra.Command{
-	Use:   "bash containerId",
+	Use:   "bash CONTAINERID",
 	Short: "Executes a bash shell in a running container",
 	Long:  `Executes a bash shell via /bin/bash in a running container`,
 	Args:  cobra.ExactArgs(1),

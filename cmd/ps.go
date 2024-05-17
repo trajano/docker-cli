@@ -103,9 +103,14 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 				if swarmService {
 					ports = []types.Port{}
 				}
+
+        existingPorts := make(map[string]bool)
 				for _, port := range ports {
 					if port.PublicPort != 0 {
-						exposedPorts = append(exposedPorts, strconv.FormatUint(uint64(port.PublicPort), 10))
+            nextPort := strconv.FormatUint(uint64(port.PublicPort), 10)
+            if !existingPorts[nextPort] {
+              exposedPorts = append(exposedPorts, nextPort)
+            }
 					}
 				}
 				t.AppendRow([]interface{}{

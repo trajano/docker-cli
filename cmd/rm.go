@@ -8,15 +8,17 @@ import (
 	"fmt"
 
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
+	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )
 
 // rmCmd represents the rm command
 var rmCmd = &cobra.Command{
-	Use:   "rm",
+	Use:   "rm [CONTAINERID...]",
 	Short: "Remove a container",
-	Long:  `Kill and remove a container along with any anonymous volumes associated with it`,
+	Long:  `Kill and remove a container along with any anonymous volumes associated with it and prune`,
 	RunE: func(cmd *cobra.Command, containerIds []string) error {
 		cli, err := client.NewClientWithOpts(client.FromEnv)
 		if err != nil {
@@ -32,7 +34,27 @@ var rmCmd = &cobra.Command{
 			}
 			fmt.Println(containerId)
 		}
-		return nil
+    containerPruneReport, err := cli.ContainersPrune(context.Background(), filters.Args{})
+    for _, prunedContainerId := range containerPruneReport.ContainersDeleted {
+      fmt.Printf("container %s pruned\n", prunedContainerId)
+    }
+		if err != nil {
+			return err
+		}
+    volumesPruneReport, err := cli.VolumesPrune(context.Background(), filters.Args{})
+    for _, prunedVolumeId := range volumesPruneReport.VolumesDeleted {
+      fmt.Printf("volume %s pruned\n", prunedVolumeId)
+    }
+		if err != nil {
+			return err
+		}
+    if (containerPruneReport.SpaceReclaimed > 0){
+    fmt.Printf("%s freed from containers\n", humanize.Bytes(containerPruneReport.SpaceReclaimed))
+    }
+    if (volumesPruneReport.SpaceReclaimed > 0) {
+    fmt.Printf("%s freed from volumes\n", humanize.Bytes(volumesPruneReport.SpaceReclaimed))
+    }
+  return nil
 	},
 }
 
