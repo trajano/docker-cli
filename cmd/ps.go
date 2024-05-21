@@ -105,16 +105,16 @@ func psFunc(cmd *cobra.Command, keys []string) error {
 					ports = []types.Port{}
 				}
 
-        existingPorts := make(map[string]bool)
+				existingPorts := make(map[string]bool)
 				for _, port := range ports {
 					if port.PublicPort != 0 {
-            nextPort := strconv.FormatUint(uint64(port.PublicPort), 10)
-            if !existingPorts[nextPort] {
-              exposedPorts = append(exposedPorts, nextPort)
-            }
+						nextPort := strconv.FormatUint(uint64(port.PublicPort), 10)
+						if !existingPorts[nextPort] {
+							exposedPorts = append(exposedPorts, nextPort)
+						}
 					}
 				}
-        sort.Strings(exposedPorts)
+				sort.Strings(exposedPorts)
 				t.AppendRow([]interface{}{
 					container.Names[0][1:],
 					imageName,

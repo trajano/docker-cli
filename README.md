@@ -37,6 +37,11 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 - [ ] `docker logs` like docker logs but starts tailing
   - [ ] supports a positional paramter which represents since without having to type in `--since`
   - [ ] the command usage is `docker tail [since] [containerID]`
+- [x] `docker mnt .` mounts the current directory to `/mnt` and runs alpine image (note any relative path can work)
+  - [x] `docker mnt . [image]` mounts the current directory to `/mnt` and runs the image specified
+  - [x] `docker mnt . [image] [cmd...]` mounts the current directory to `/mnt` and runs the image specified with the command
+  - [x] `docker mnt [volume] [image]` mounts the named volume to `/mnt` and runs the image specified
+  - [x] `docker mnt [volume] [image] [cmd...]` mounts the named volume to `/mnt` and runs the image specified with the command
 
 - [ ] `docker service push <service> <image>` replaces the image of the service if image is not provided it pulls and then does the update to ensure it is the latest copy. It will also add `--with-registry-auth` as appropriate
 

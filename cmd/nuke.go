@@ -25,9 +25,9 @@ var nukeCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-    containers, err := cli.ContainerList(context.Background(), container.ListOptions{
-      All: PsAll,
-    })
+		containers, err := cli.ContainerList(context.Background(), container.ListOptions{
+			All: PsAll,
+		})
 		if err != nil {
 			return err
 		}
@@ -40,31 +40,31 @@ var nukeCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-      cli.ContainersPrune(context.Background(), filters.Args{})
-      cli.VolumesPrune(context.Background(), filters.Args{})
+			cli.ContainersPrune(context.Background(), filters.Args{})
+			cli.VolumesPrune(context.Background(), filters.Args{})
 
 			fmt.Println(runningContainer.ID + " " + strings.Join(runningContainer.Names, " "))
 		}
-    containerPruneReport, err := cli.ContainersPrune(context.Background(), filters.Args{})
-    for _, prunedContainerId := range containerPruneReport.ContainersDeleted {
-      fmt.Printf("container %s pruned\n", prunedContainerId)
-    }
+		containerPruneReport, err := cli.ContainersPrune(context.Background(), filters.Args{})
+		for _, prunedContainerId := range containerPruneReport.ContainersDeleted {
+			fmt.Printf("container %s pruned\n", prunedContainerId)
+		}
 		if err != nil {
 			return err
 		}
-    volumesPruneReport, err := cli.VolumesPrune(context.Background(), filters.Args{})
-    for _, prunedVolumeId := range volumesPruneReport.VolumesDeleted {
-      fmt.Printf("volume %s pruned\n", prunedVolumeId)
-    }
+		volumesPruneReport, err := cli.VolumesPrune(context.Background(), filters.Args{})
+		for _, prunedVolumeId := range volumesPruneReport.VolumesDeleted {
+			fmt.Printf("volume %s pruned\n", prunedVolumeId)
+		}
 		if err != nil {
 			return err
 		}
-    if (containerPruneReport.SpaceReclaimed > 0){
-    fmt.Printf("%s freed from containers\n", humanize.Bytes(containerPruneReport.SpaceReclaimed))
-    }
-    if (volumesPruneReport.SpaceReclaimed > 0) {
-    fmt.Printf("%s freed from volumes\n", humanize.Bytes(volumesPruneReport.SpaceReclaimed))
-    }
+		if containerPruneReport.SpaceReclaimed > 0 {
+			fmt.Printf("%s freed from containers\n", humanize.Bytes(containerPruneReport.SpaceReclaimed))
+		}
+		if volumesPruneReport.SpaceReclaimed > 0 {
+			fmt.Printf("%s freed from volumes\n", humanize.Bytes(volumesPruneReport.SpaceReclaimed))
+		}
 		return nil
 	},
 }

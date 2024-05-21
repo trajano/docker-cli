@@ -34,27 +34,27 @@ var rmCmd = &cobra.Command{
 			}
 			fmt.Println(containerId)
 		}
-    containerPruneReport, err := cli.ContainersPrune(context.Background(), filters.Args{})
-    for _, prunedContainerId := range containerPruneReport.ContainersDeleted {
-      fmt.Printf("container %s pruned\n", prunedContainerId)
-    }
+		containerPruneReport, err := cli.ContainersPrune(context.Background(), filters.Args{})
+		for _, prunedContainerId := range containerPruneReport.ContainersDeleted {
+			fmt.Printf("container %s pruned\n", prunedContainerId)
+		}
 		if err != nil {
 			return err
 		}
-    volumesPruneReport, err := cli.VolumesPrune(context.Background(), filters.Args{})
-    for _, prunedVolumeId := range volumesPruneReport.VolumesDeleted {
-      fmt.Printf("volume %s pruned\n", prunedVolumeId)
-    }
+		volumesPruneReport, err := cli.VolumesPrune(context.Background(), filters.Args{})
+		for _, prunedVolumeId := range volumesPruneReport.VolumesDeleted {
+			fmt.Printf("volume %s pruned\n", prunedVolumeId)
+		}
 		if err != nil {
 			return err
 		}
-    if (containerPruneReport.SpaceReclaimed > 0){
-    fmt.Printf("%s freed from containers\n", humanize.Bytes(containerPruneReport.SpaceReclaimed))
-    }
-    if (volumesPruneReport.SpaceReclaimed > 0) {
-    fmt.Printf("%s freed from volumes\n", humanize.Bytes(volumesPruneReport.SpaceReclaimed))
-    }
-  return nil
+		if containerPruneReport.SpaceReclaimed > 0 {
+			fmt.Printf("%s freed from containers\n", humanize.Bytes(containerPruneReport.SpaceReclaimed))
+		}
+		if volumesPruneReport.SpaceReclaimed > 0 {
+			fmt.Printf("%s freed from volumes\n", humanize.Bytes(volumesPruneReport.SpaceReclaimed))
+		}
+		return nil
 	},
 }
 
