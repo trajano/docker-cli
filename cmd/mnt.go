@@ -17,14 +17,20 @@ var MntImage string
 
 var mntCmd = &cobra.Command{
 	Use:   "mnt VOLUME|PATH [IMAGE] [ARGS...]",
-	Short: "Mounts a volume and runs a command",
-	Long:  `Mounts a volume or the a relative path then runs the specified Docker image with logging driver turned off and allows interaction from the console`,
-	Args:  cobra.MinimumNArgs(1),
+	Short: "Mounts a volume or path and runs a command",
+	Long:  `Mounts a volume or path (may be relative) then runs the specified Docker image with logging driver turned off and allows interaction from the console`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		volume := args[0]
+		volume := "."
+		if len(args) >= 1 {
+			volume = args[0]
+		}
 		// ignore the error just presume it's a volume label in that case
 		stat, err := os.Stat(volume)
-		if err == nil && stat.IsDir() && (strings.HasPrefix(volume, "./") || strings.HasPrefix(volume, "../") || volume == "." || volume == "..") {
+		if err == nil && stat.IsDir() && (strings.HasPrefix(volume, "/") ||
+			strings.HasPrefix(volume, "./") ||
+			strings.HasPrefix(volume, "../") ||
+			volume == "." ||
+			volume == "..") {
 			path, err := filepath.Abs(volume)
 			if err != nil {
 				return err
