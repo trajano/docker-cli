@@ -40,9 +40,14 @@ var mntCmd = &cobra.Command{
 			cmdArgs = args[2:]
 		}
 
-		RunDockerCommand(append([]string{"run", "-it",
+		RunDockerCommand(append([]string{
+			"run",
+			"-it",
 			"-v", volume + ":/mnt",
-			"--log-driver=none", "--rm", image}, cmdArgs...)...)
+			"--log-driver=none",
+			"--rm",
+			image},
+			cmdArgs...)...)
 		return nil
 	},
 }
