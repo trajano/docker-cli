@@ -50,7 +50,8 @@ var mntCmd = &cobra.Command{
 			"run",
 			"-it",
 			"-v", volume + ":/mnt",
-			"--log-driver=none",
+			"--log-driver", "none",
+			"--workdir", "/mnt",
 			"--rm",
 			image},
 			cmdArgs...)...)
