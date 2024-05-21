@@ -19,6 +19,7 @@ var mntCmd = &cobra.Command{
 	Use:   "mnt VOLUME|PATH [IMAGE] [ARGS...]",
 	Short: "Mounts a volume or path and runs a command",
 	Long:  `Mounts a volume or path (may be relative) then runs the specified Docker image with logging driver turned off and allows interaction from the console`,
+    DisableFlagParsing: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		volume := "."
 		if len(args) >= 1 {
