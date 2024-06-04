@@ -28,7 +28,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
   - [ ] if container has an image containing `httpd` or `ngnix` display as `http://localhost:{port}`
   - [ ] if container internal port is `80`, `3000` or `8080` display as `http://localhost:{port}`
 - [x] `docker build` adds implicit secrets to the build.
-  - [x] `docker build` maps to `docker buildx build` which will use the builder specified by `docker buildx use`.
+  - [x] `docker build` maps to `docker buildx build --load` which will use the builder specified by `docker buildx use`.
   - [x] `init-gradle == $HOME/.gradle/init.gradle`
   - [x] `npmrc == $HOME/.npmrc`
   - [x] `settings-xml == $HOME/.mvn/settings.xml`

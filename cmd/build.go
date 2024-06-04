@@ -57,6 +57,7 @@ var buildCmd = &cobra.Command{
 		}
 
 		var flags []string
+		flags = append(flags, "--load")
 		for _, buildSecret := range buildSecrets {
 			flags = append(flags, "--secret="+buildSecret)
 		}
