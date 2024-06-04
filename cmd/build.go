@@ -66,9 +66,9 @@ var buildCmd = &cobra.Command{
 		}
 
 		if len(args) == 0 {
-			RunDockerCommand(append(append([]string{"build"}, flags...), ".")...)
+			RunDockerCommand(append(append([]string{"buildx", "build"}, flags...), ".")...)
 		} else {
-			RunDockerCommand(append(append([]string{"build"}, flags...), args[0])...)
+			RunDockerCommand(append(append([]string{"buildx", "build"}, flags...), args[0])...)
 		}
 
 		return nil
