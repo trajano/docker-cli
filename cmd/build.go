@@ -47,7 +47,7 @@ var buildCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		buildSecrets, err = appendSecret(buildSecrets, "settings-xml", ".mvn", "settings.xml")
+		buildSecrets, err = appendSecret(buildSecrets, "settings-xml", ".m2", "settings.xml")
 		if err != nil {
 			return err
 		}

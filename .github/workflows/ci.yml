@@ -28,7 +28,7 @@ jobs:
         run: GOOS=darwin GOARCH=amd64 go build -o dist/docker-cli_darwin_amd64
 
       - name: Build for Linux
-        run: GOOS=linux GOARCH=amd64 go build -o dist/docker-cli_linux_amd64
+        run: GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -o dist/docker-cli_linux_amd64
 
       - name: Build for Raspberry Pi
         run: GOOS=linux GOARCH=arm GOARM=7 go build -o dist/docker-cli_linux_arm
