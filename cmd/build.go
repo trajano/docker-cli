@@ -13,6 +13,7 @@ import (
 
 var buildTag string
 var buildQuiet bool
+var buildPlain bool
 var buildSecrets []string
 
 /**
@@ -66,6 +67,14 @@ var buildCmd = &cobra.Command{
 			flags = append(flags, "-t", buildTag)
 		}
 
+		if buildPlain {
+			flags = append(flags, "--progress=plain")
+		}
+
+		if buildQuiet {
+			flags = append(flags, "--quiet")
+		}
+
 		if len(args) == 0 {
 			RunDockerCommand(append(append([]string{"buildx", "build"}, flags...), ".")...)
 		} else {
@@ -81,4 +90,5 @@ func init() {
 	buildCmd.Flags().StringVarP(&buildTag, "tag", "t", "", "Name and optionally a tag (format: \"name:tag\")")
 	buildCmd.Flags().StringArrayVar(&buildSecrets, "secret", []string{}, "Secret to expose to the build (format: \"id=mysecret[,src=/local/secret]\")")
 	buildCmd.Flags().BoolVarP(&buildQuiet, "quiet", "q", false, "Suppress the build output and print image ID on success")
+	buildCmd.Flags().BoolVarP(&buildPlain, "plain", "", false, "Plain output")
 }

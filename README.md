@@ -8,6 +8,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
 
 - [x] `docker rm` is forced
   - [x] and remove anonmized volumes
+- [x] `docker rmtmp` removes containers whose images are no longer labeled.  Useful when you're testing and creating new container images for every build.
 - [x] `docker nuke` will remove all running containers and associated volumes (no warning, primarilly used for development when I just want a clean slate without doing a full reset)
 - [x] `docker ls` maps to `docker ps`
 - [x] `docker ps` will actually call `docker inspect` then render the data using github.com/jedib0t/go-pretty.
@@ -33,6 +34,7 @@ This wraps the Docker CLI so that it establishes saner defaults for my own needs
   - [x] `npmrc == $HOME/.npmrc`
   - [x] `settings-xml == $HOME/.mvn/settings.xml`
   - [x] `aws-credentials == $HOME/.aws/credentials`
+- [x] `docker build --plain` maps to `docker build --progress=plain`
 - [x] `docker bash` runs `/bin/bash` given a container ID
 - [x] `docker sh` runs `/bin/sh` given a container ID
 - [ ] `docker logs` like docker logs but starts tailing

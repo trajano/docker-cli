@@ -8,17 +8,17 @@ import (
 )
 
 // serviceCmd represents the service command
-var serviceCmd = &cobra.Command{
-	Use:   "service",
-	Short: "Manage services",
-	Long:  `Manage Docker Swarm services.`,
+var stackCmd = &cobra.Command{
+	Use:   "stack",
+	Short: "Manage stacks",
+	Long:  `Manage Docker Swarm stacks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		RunDockerCommand(append([]string{"service"}, args...)...)
+		RunDockerCommand(append([]string{"stack"}, args...)...)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(serviceCmd)
+	rootCmd.AddCommand(stackCmd)
 
 	// Here you will define your flags and configuration settings.
 
